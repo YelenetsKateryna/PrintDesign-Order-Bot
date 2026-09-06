@@ -13,8 +13,8 @@ from print_studio_bot.utils.report import send_order_report
 
 class FakeClient:
     def __init__(self):
-        self.full_name = "Іван Петренко"
-        self.phone = "+380501234567"
+        self.full_name = "Маряни Симоненко"
+        self.phone = "+380954327837"
         self.telegram_id = 123456
 
 
