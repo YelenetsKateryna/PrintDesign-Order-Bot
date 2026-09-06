@@ -41,6 +41,13 @@ async def choose_type(callback: CallbackQuery, state: FSMContext):
     await callback.answer()
 
 
+@router.callback_query(CalendarOrder.choosing_design, F.data == "cal_back:type")
+async def back_to_type(callback: CallbackQuery, state: FSMContext):
+    await state.set_state(CalendarOrder.choosing_type)
+    await callback.message.answer("Оберіть тип календаря:", reply_markup=calendar_type_keyboard())
+    await callback.answer()
+
+
 @router.callback_query(CalendarOrder.choosing_design, F.data.startswith("cal_design:"))
 async def choose_design(callback: CallbackQuery, state: FSMContext):
     key = callback.data.split(":")[1]
@@ -55,6 +62,13 @@ async def choose_design(callback: CallbackQuery, state: FSMContext):
         f"Обрано: {CALENDAR_DESIGNS[key]}\n\nОберіть період:",
         reply_markup=calendar_period_keyboard(),
     )
+    await callback.answer()
+
+
+@router.callback_query(CalendarOrder.choosing_period, F.data == "cal_back:design")
+async def back_to_design(callback: CallbackQuery, state: FSMContext):
+    await state.set_state(CalendarOrder.choosing_design)
+    await callback.message.answer("Оберіть варіант дизайну:", reply_markup=calendar_design_keyboard())
     await callback.answer()
 
 

@@ -24,7 +24,7 @@ class Order(BaseModel):
     client = ForeignKeyField(Client, backref="orders")
     product_type = CharField(null=True)      # journal / calendar
     subcategory = CharField(null=True)       # gift / turnkey / photo / limited / concept ...
-    status = CharField(default="draft")      # draft / submitted
+    status = CharField(default="draft")      # draft / submitted / cancelled
     answers_json = TextField(default="{}")   # усі відповіді клієнта (JSON)
     created_at = DateTimeField(default=datetime.datetime.now)
 
@@ -37,6 +37,13 @@ class OrderFile(BaseModel):
     created_at = DateTimeField(default=datetime.datetime.now)
 
 
+class ClientQuestion(BaseModel):
+    client = ForeignKeyField(Client, backref="questions")
+    order = ForeignKeyField(Order, backref="questions", null=True)
+    question_text = TextField()
+    created_at = DateTimeField(default=datetime.datetime.now)
+
+
 def init_db():
     db.connect(reuse_if_open=True)
-    db.create_tables([Client, Order, OrderFile])
+    db.create_tables([Client, Order, OrderFile, ClientQuestion])

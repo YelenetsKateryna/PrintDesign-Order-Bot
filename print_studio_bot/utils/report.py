@@ -37,9 +37,18 @@ async def send_order_report(bot: Bot, order):
     await bot.send_message(ADMIN_ID, "\n".join(lines))
 
     for f in files:
+        purpose_text = f.purpose.replace("_", " ")
+        caption_text = f.caption or ""
+        plain_text = f"📝 {purpose_text}"
+        if caption_text:
+            plain_text = f"{plain_text} — {caption_text}"
+
         if not f.file_id:
+            await bot.send_message(ADMIN_ID, plain_text)
             continue
-        caption = f.purpose + (f" — {f.caption}" if f.caption else "")
+
+        caption = f.purpose + (f" — {caption_text}" if caption_text else "")
+
         try:
             await bot.send_photo(ADMIN_ID, f.file_id, caption=caption)
         except Exception:

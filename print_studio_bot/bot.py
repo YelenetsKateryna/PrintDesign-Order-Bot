@@ -6,7 +6,7 @@ from aiogram.fsm.storage.memory import MemoryStorage
 
 from config import BOT_TOKEN
 from database.models import init_db
-from handlers import start, menu, journal, calendar, confirmation
+from handlers import start, menu, journal, calendar, confirmation, admin_question, cancel
 
 
 async def main():
@@ -17,8 +17,10 @@ async def main():
     bot = Bot(token=BOT_TOKEN)
     dp = Dispatcher(storage=MemoryStorage())
 
+    dp.include_router(cancel.router)
     dp.include_router(start.router)
     dp.include_router(menu.router)
+    dp.include_router(admin_question.router)
     dp.include_router(journal.router)
     dp.include_router(calendar.router)
     dp.include_router(confirmation.router)

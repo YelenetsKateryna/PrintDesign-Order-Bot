@@ -39,6 +39,13 @@ async def choose_subcategory(callback: CallbackQuery, state: FSMContext):
     await callback.answer()
 
 
+@router.callback_query(JournalOrder.choosing_pages, F.data == "journal_back:subcategory")
+async def back_to_subcategory(callback: CallbackQuery, state: FSMContext):
+    await state.set_state(JournalOrder.choosing_subcategory)
+    await callback.message.answer("Оберіть вид журналу:", reply_markup=subcategory_keyboard())
+    await callback.answer()
+
+
 @router.callback_query(JournalOrder.choosing_pages, F.data.startswith("journal_pages:"))
 async def choose_pages(callback: CallbackQuery, state: FSMContext):
     pages = int(callback.data.split(":")[1])
@@ -55,6 +62,13 @@ async def choose_pages(callback: CallbackQuery, state: FSMContext):
         f"Обрано: {pages} сторінок\n\nОберіть статті для журналу (можна декілька):",
         reply_markup=articles_keyboard(set()),
     )
+    await callback.answer()
+
+
+@router.callback_query(JournalOrder.choosing_articles, F.data == "journal_back:pages")
+async def back_to_pages(callback: CallbackQuery, state: FSMContext):
+    await state.set_state(JournalOrder.choosing_pages)
+    await callback.message.answer("Оберіть кількість сторінок:", reply_markup=pages_keyboard())
     await callback.answer()
 
 
